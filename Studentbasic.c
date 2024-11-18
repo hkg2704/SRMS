@@ -114,36 +114,46 @@ void updateStudent()
 }
 void deleteStudent()
 {
-    FILE *file =fopen("student.txt","rb");
-    if(file==NULL)
-    {
-        printf("No files Found");
+    FILE *file = fopen("students.dat", "rb");
+    if (file == NULL) {
+        printf("No records found.\n");
         return;
     }
+
+    FILE *tempFile = fopen("temp.dat", "wb");
+    if (tempFile == NULL) {
+        printf("Error creating temporary file.\n");
+        fclose(file);
+        return;
+    }
+
     int id;
-    printf("Enter Student ROLL.no to search: ");
+    printf("Enter Student ID to delete: ");
     scanf("%d", &id);
 
     Student s;
-    int found=0;
-    
-    while(fread(&s,sizeof(Student),1,file))
-    {
-        if(s.roll==id){
+    int found = 0;
 
-            fseek(file,-sizeof(Student),SEEK_CUR);
-            fwrite(&s,sizeof(Student),1,file);
-            printf("Student Details Updated\n");
-            found=1;
-            break;
-            
+   
+    while (fread(&s, sizeof(Student), 1, file)) {
+        if (s.roll != id) {
+            fwrite(&s, sizeof(Student), 1, tempFile);
+        } else {
+            found = 1;  
+        }
     }
-    }
-    if(found==0)
-    {
-        printf("Student not found");
-    }
+
     fclose(file);
+    fclose(tempFile);
+
+    if (found) {
+        remove("students.dat");
+        rename("temp.dat", "students.dat");
+        printf("Student deleted successfully.\n");
+    } else {
+        remove("temp.dat");
+        printf("Student not found.\n");
+}
 }
 int main() {
     int choice;
