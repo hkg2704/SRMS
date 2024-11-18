@@ -82,7 +82,7 @@ void updateStudent()
         return;
     }
     int id;
-    printf("Enter Student ROLL.no to search: ");
+    printf("Enter Student Roll.no to search: ");
     scanf("%d", &id);
 
     Student s;
