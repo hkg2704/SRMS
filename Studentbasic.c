@@ -91,11 +91,11 @@ void updateStudent()
     while(fread(&s,sizeof(Student),1,file))
     {
         if(s.roll==id){
-            printf("Enter new age: ");
+            printf("Enter new ROLL: ");
             scanf("%d", &s.roll);
             printf("Enter new name: ");
             scanf(" %[^\n]", s.name);
-            printf("Enter new marks: ");
+            printf("Enter new class: ");
             scanf("%s", &s.class);
 
             fseek(file,-sizeof(Student),SEEK_CUR);
@@ -114,7 +114,36 @@ void updateStudent()
 }
 void deleteStudent()
 {
+    FILE *file =fopen("student.txt","rb");
+    if(file==NULL)
+    {
+        printf("No files Found");
+        return;
+    }
+    int id;
+    printf("Enter Student ROLL.no to search: ");
+    scanf("%d", &id);
+
+    Student s;
+    int found=0;
     
+    while(fread(&s,sizeof(Student),1,file))
+    {
+        if(s.roll==id){
+
+            fseek(file,-sizeof(Student),SEEK_CUR);
+            fwrite(&s,sizeof(Student),1,file);
+            printf("Student Details Updated\n");
+            found=1;
+            break;
+            
+    }
+    }
+    if(found==0)
+    {
+        printf("Student not found");
+    }
+    fclose(file);
 }
 int main() {
     int choice;
@@ -122,9 +151,10 @@ int main() {
     do {
         printf("\nStudent Record Management System\n");
         printf("1. Add Student\n");
-        printf("2. Search Student\n");
-        printf("3. Display All Students\n");
+        printf("2. Display All Students\n");
+        printf("3. Search Student\n");
         printf("4. Update Student\n");
+
         printf("5. Delete Student\n");
         printf("6. Exit\n");
 
